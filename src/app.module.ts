@@ -3,26 +3,23 @@ import { AuthModule } from './auth/auth.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import configuration from './config/configuration';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { UsersModule } from './users/users.module';
+import { PasswordsModule } from './passwords/passwords.module';
+import { typeOrmConfigFactory } from './config/type-orm-config-factory';
+import { PassportModule } from '@nestjs/passport';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ load: [configuration] }),
+    PassportModule,
     AuthModule,
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
-      useFactory: (configService: ConfigService) => ({
-        type: 'postgres',
-        host: configService.get('DB.HOST'),
-        port: configService.get('DB.PORT'),
-        username: configService.get('DB.USERNAME'),
-        password: configService.get('DB.PASSWORD'),
-        database: configService.get('DB.DATABASE'),
-        entities: [],
-        synchronize: true,
-        autoLoadEntities: true,
-      }),
+      useFactory: typeOrmConfigFactory,
     }),
+    UsersModule,
+    PasswordsModule,
   ],
   controllers: [],
   providers: [],
