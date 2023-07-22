@@ -1,9 +1,18 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  Injectable,
+  UnauthorizedException,
+  ForbiddenException,
+} from '@nestjs/common';
 import { UsersService } from 'src/users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import { RegisterUserDto } from './dto/register-user.dto';
 import { PasswordsService } from 'src/passwords/passwords.service';
-import { NOT_UNIQUE_EMAIL_MSG, INVALID_CREDENTIALS_MSG } from './constants';
+import {
+  NOT_UNIQUE_EMAIL_MSG,
+  INVALID_CREDENTIALS_MSG,
+  ACCESS_TOKEN_REQUIRED_MSG,
+  BROKEN_ACCESS_TOKEN_MSG,
+} from './constants';
 import { ConflictException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtPayload, TokenPair } from './types';
@@ -72,5 +81,31 @@ export class AuthService {
       return user;
     }
     return null;
+  }
+
+  async refreshTokenPair(
+    accessToken: string,
+    userPayload: JwtPayload,
+  ): Promise<TokenPair> {
+    if (!accessToken) {
+      throw new ForbiddenException(ACCESS_TOKEN_REQUIRED_MSG);
+    }
+
+    const accessTokenPayload = this.jwtService.decode(accessToken);
+
+    if (
+      typeof accessTokenPayload === 'string' ||
+      userPayload?.id !== accessTokenPayload.id
+    ) {
+      throw new ForbiddenException(BROKEN_ACCESS_TOKEN_MSG);
+    }
+
+    const user = await this.usersService.findById(userPayload.id);
+
+    if (!user) {
+      throw new ForbiddenException(BROKEN_ACCESS_TOKEN_MSG);
+    }
+
+    return this.generateTokenPair({ id: user.id });
   }
 }
