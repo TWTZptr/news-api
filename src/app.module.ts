@@ -7,6 +7,7 @@ import { UsersModule } from './users/users.module';
 import { PasswordsModule } from './passwords/passwords.module';
 import { typeOrmConfigFactory } from './config/type-orm-config-factory';
 import { PassportModule } from '@nestjs/passport';
+import { NewsModule } from './news/news.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { PassportModule } from '@nestjs/passport';
     }),
     UsersModule,
     PasswordsModule,
+    NewsModule,
   ],
   controllers: [],
   providers: [],
