@@ -88,7 +88,9 @@ export class Init1689970887522 implements MigrationInterface {
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    for (const table of this.tables) {
+    const reversedTables = this.tables.reverse();
+
+    for (const table of reversedTables) {
       await queryRunner.dropTable(table);
     }
   }
