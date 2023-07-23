@@ -1,8 +1,9 @@
 ## Установка
 
-Убедится, что на машине установлена PostreSQL
+Убедиться, что на машине установлена PostgreSQL
 
 Создать .env со своими данными по образцу .env.example.
+Затем:
 
 ```
 yarn
@@ -38,21 +39,75 @@ yarn start:dev
 npm run start:dev
 ```
 
-Описание .env параметов:
+## Доступные машруты
+
+```
+  localhost:3000/auth/register POST
+
+  body: {
+    "email": "example@mail.com",
+    "password": "strongPASS1"
+  }
+```
+
+```
+  localhost:3000/auth/login POST
+
+  body: {
+    "email": "example@mail.com",
+    "password": "strongPASS1"
+  }
+```
+
+```
+  localhost:3000/auth/refresh POST
+```
+
+```
+  localhost:3000/auth/logout POST
+```
+
+```
+  localhost:3000/news GET
+```
+
+```
+  localhost:3000/news POST
+
+  body: {
+    "title": "news title",
+    "text": "news text"
+  }
+```
+
+```
+  localhost:3000/news/:id PATCH
+
+  body: {
+    "title": "new title",
+    "text": "new text"
+  } - оба поля опциональны
+```
+
+```
+  localhost:3000/news/:id DELETE
+```
+
+## Описание .env параметов:
 
 APP_HOST=имя-хоста
 
 APP_PORT=порт
 
-POSTGRES_USER=имя-пользователя-БД
+DB_USERNAME=имя-пользователя-БД
 
-POSTGRES_PASSWORD=пароль-пользователя-БД
+DB_PASSWORD=пароль-пользователя-БД
 
-POSTGRES_DB=имя-БД
+DB_DATABASE=имя-БД
 
-POSTGRES_HOST=имя-хоста-БД
+DB_HOST=имя-хоста-БД
 
-POSTGRES_PORT=порт-БД
+DB_PORT=порт-БД
 
 ACCESS_TOKEN_EXPIRATION_TIME=время-действия-токена-доступа
 
